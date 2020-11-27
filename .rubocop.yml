@@ -6,16 +6,16 @@ AllCops:
     - data/**/*
     - ./Gemfile
 
+Layout/LineLength:
+  Enabled: true
+  Max: 130
+
 Metrics/AbcSize:
   Enabled: false
 
-Metrics/LineLength:
-  Enabled: true
-  Max: 140
-
 Metrics/MethodLength:
   Enabled: true
-  Max: 20
+  Max: 25
   Exclude:
     - spec/**/*
 
@@ -23,23 +23,28 @@ Metrics/BlockLength:
   Exclude:
     - spec/**/*
 
-# Metrics/CyclomaticComplexity:
+Metrics/CyclomaticComplexity:
+  Max: 9
 #  Exclude:
 
-# Metrics/PerceivedComplexity:
+Metrics/PerceivedComplexity:
+  Max: 11
 #   Exclude:
 
 Lint/RaiseException:
-  Enabled: false
+  Enabled: true
 
 Lint/StructNewOverride:
+  Enabled: true
+
+Style/FrozenStringLiteralComment:
   Enabled: false
 
 Style/HashEachMethods:
-  Enabled: false
+  Enabled: true
 
 Style/HashTransformKeys:
-  Enabled: false
+  Enabled: true
 
 Style/HashTransformValues:
-  Enabled: false
+  Enabled: true

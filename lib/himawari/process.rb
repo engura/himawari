@@ -1,4 +1,10 @@
 module Himawari
+  # these methods provide checking and (trying to) fix the Tiles that we downloaded from the web.
+  # sometimes, the connection might be bad, and instead of an actual PNG for a Tile, we get a blank empty file.
+  # in other times, we get a special "no_image" png. This one is annoying. It IS a real picture,
+  # but it most CERTAINLY is NOT a picture of the Earth. (These normally come back during 0240 and 1440 timestamps)
+  # -- Himawari does not take photos when the Sun is in the view of the Satellite. Well, we wouldn't be able to see
+  # the Earth at those times anyway due to the Sun's brightness.
   module Process
     private
 
@@ -12,15 +18,15 @@ module Himawari
     end
 
     def process_bad_tiles(bad_tiles, tile)
-      begin
-        i = File.basename(tile[0..-9])
-        ending = tile[-7,3]
-        stamp = Time.parse(i.dup.insert(-3, ':') + ':00+00:00')
-        bad_tiles[i] = [] unless bad_tiles.dig(i)
-        bad_tiles[i] << [himawari_format(stamp, ending), himawari_format(stamp - 600, ending), himawari_format(stamp - 1200, ending)]
-      rescue
-        puts "Error: could not derive timestamp from filename of `#{tile}`"
-      end
+      i = File.basename(tile[0..-9])
+      ending = tile[-7, 3]
+      stamp = Time.parse(i.dup.insert(-3, ':') + ':00+00:00')
+      bad_tiles[i] = [] unless bad_tiles.dig(i)
+      bad_tiles[i] << [
+        himawari_format(stamp, ending),
+        himawari_format(stamp - 600, ending),
+        himawari_format(stamp - 1_200, ending)
+      ]
       # `cp #{tile} #{tile.gsub('/t_', '/x_')}`
       # no need to delete individual "bad tiles" because we will try to recover them.
       # But upon failure, will delete the whole himawari image
@@ -33,14 +39,15 @@ module Himawari
     end
 
     def png?(file)
-      File.size(file) > 0 && IO.read(file, 4).force_encoding('utf-8') == "\x89PNG"
+      File.size(file).positive? && IO.read(file, 4).force_encoding('utf-8') == "\x89PNG"
     end
 
     def bad_tile?(tile)
       !png?(tile) || File.size(tile) == @control_size && system("cmp #{tile} #{app_root}/no_image.png")
     end
 
-    # bad_tiles structure: { "t_2019-11-11T0240": [ [ [tile_url_1, tile_url_2, tile_url_3] ], [array_of_tiles], [array_of_tiles] ] }
+    # bad_tiles structure:
+    # { "t_2019-11-11T0240": [ [ [tile_url_1, tile_url_2, tile_url_3] ], [array_of_tiles], [array_of_tiles] ] }
     def recover_bad_sectors(bad_tiles)
       bad_tiles.each do |bad_pic_name, sectors|
         pic_not_good = true
@@ -49,7 +56,7 @@ module Himawari
           puts "#{bad_pic_name} has #{sectors.count} pieces missing. Too many. Can't recover & will delete the whole thing!"
         else
           puts "#{bad_pic_name} has #{sectors.count} pieces missing. Will try to recover/fill in with older data."
-          tile = "#{data_path}/#{bad_pic_name}-#{sectors[0][-3,3]}.png"
+          tile = "#{data_path}/#{bad_pic_name}-#{sectors[0][-3, 3]}.png"
           sectors.each do |bad_tile|
             `curl -sC - "#{HIMAWARI_URL}/#{resolution}d/550/#{bad_tile}.png" > #{tile}`
             if bad_tile?(tile) # yep, it's bad...
