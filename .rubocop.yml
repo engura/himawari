@@ -1,1 +1,45 @@
- 
+AllCops:
+  DisplayCopNames: true
+  StyleGuideCopsOnly: false
+  TargetRubyVersion: 2.5
+  Exclude:
+    - data/**/*
+    - ./Gemfile
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/LineLength:
+  Enabled: true
+  Max: 140
+
+Metrics/MethodLength:
+  Enabled: true
+  Max: 20
+  Exclude:
+    - spec/**/*
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
+
+# Metrics/CyclomaticComplexity:
+#  Exclude:
+
+# Metrics/PerceivedComplexity:
+#   Exclude:
+
+Lint/RaiseException:
+  Enabled: false
+
+Lint/StructNewOverride:
+  Enabled: false
+
+Style/HashEachMethods:
+  Enabled: false
+
+Style/HashTransformKeys:
+  Enabled: false
+
+Style/HashTransformValues:
+  Enabled: false

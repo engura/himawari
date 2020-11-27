@@ -2,5 +2,5 @@
 
 require 'himawari'
 
-puts 'Hey yo!'
-Himawari.yo
+params = Himawari::OsUtils.parse_cli_args
+Himawari.autorun(params)

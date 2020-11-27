@@ -5,21 +5,7 @@ module Himawari
     include Process
 
     def start
-      if blacklisted_wifi?
-        puts "Blacklisted Network; Won't go online"
-        return
-      end
-
-      if `find #{data_path} -name \"t_*.png\"`.length > 0
-        puts "Another himawari process is still downloading/processing files. Quitting w/o overlapping."
-        return
-      end
-
-      if !internet_connection?
-        puts "Not online. Can't update"
-        return
-      end
-
+      return false unless everything_ok
       set_background(latest_local[:filename], destination_path) if pics_updated? && mode == :live
       # clean up: remove any files that are more than 2 days old
       `find #{data_path} -name \"*.png\" -type f -mtime +2 -exec rm -f {} \\;`
@@ -27,22 +13,21 @@ module Himawari
 
     def pics(from_datetime, to_datetime)
       # returns true if any new pictures were downloaded from the web, false otherwise
-      pic_changed = false
-      from_datetime += 10 * 60 # +10.minutes
-      # puts "Modified latest_local:  #{latest_local[:timestamp]}"
+      pic_dwnlded = false
+      from_datetime += 10 * 60 # +10.minutes from our latest pic on local drive
 
       while from_datetime <= to_datetime
-        tenmin = if from_datetime.day == to_datetime.day && from_datetime.hour == to_datetime.hour
-          "{#{from_datetime.min / 10}..#{to_datetime.min / 10}}"
-        elsif !pic_changed # i.e. it's while's first iteration. don't update the whole hour, only the remaining minutes
-          "{#{from_datetime.min / 10}..5}"
+        tenmin = if last_iter?(from_datetime, to_datetime)
+          OsUtils.tenmin(from_datetime.min, to_datetime.min)
+        elsif !pic_dwnlded # i.e. it's while's first iteration. don't update the whole hour, only the remaining minutes
+          OsUtils.tenmin(from_datetime.min)
         else
-          '{0..5}'
+          OsUtils.tenmin
         end
-        pic_changed = true
 
-        pic(from_datetime, tenmin)
-        break if from_datetime.day == to_datetime.day && from_datetime.hour == to_datetime.hour
+        pic_dwnlded = pic(from_datetime, tenmin)
+
+        break if last_iter?(from_datetime, to_datetime) || !pic_dwnlded
         from_datetime = if to_datetime - from_datetime > 3600
           from_datetime + 3600
         else
@@ -50,12 +35,21 @@ module Himawari
         end
       end
 
-      puts pic_changed ? "Latest Fetched:  #{find_latest_local()[:timestamp]}" : "We are up to date with Himawari. Nothing downloaded."
-      pic_changed
+      if verbose
+        puts pic_dwnlded ? "Latest Fetched:  #{find_latest_local[:timestamp]}" : "Nothing downloaded."
+      end
+      pic_dwnlded
     end
 
     # `parallel --header : 'montage -mode concatenate -tile 2x {00,10,01,11}/{year}-{mo}-{dy}T{hr}{tenmin}000-*.png full/{year}-{mo}-{dy}T{hr}{tenmin}000.png' ::: year 2015 ::: mo 11 ::: dy {27..28} ::: hr {00..23} ::: tenmin {0..5}`
     def pic(timestamp, tenmin = '{0..5}')
+      return false unless everything_ok
+
+      if timestamp > latest_remote
+        puts "Can't download #{timestamp} because it is newer than the most recent available (#{latest_remote})"
+        return false
+      end
+
       yr = timestamp.year.to_s.rjust(2, '0')
       mo = timestamp.month.to_s.rjust(2, '0')
       dy = timestamp.day.to_s.rjust(2, '0')
@@ -84,19 +78,45 @@ module Himawari
       script = "#{app_root}/script_#{yr}_#{yr}_#{mo}_#{dy}_#{hr}.sh"
       OsUtils.scriptify_sys(script, command1)
 
-      control_size = File.size("#{app_root}/no_image.png")
-      bad_tiles = {}
-      Dir["#{data_path}/t_*.png"].each do |tile|
-        bad_tiles = process_bad_tiles(bad_tiles, tile) if File.size(tile) == control_size && system("cmp #{tile} #{app_root}/no_image.png")
-      end
-      recover_bad_sectors(bad_tiles)
+      check_tiles
 
       #system(command2) # works totally fine on mac...
       OsUtils.scriptify_sys(script, command2)
       `rm #{data_path}/t_*`
+      true
     end
 
     private
+
+    def everything_ok
+      @everything_ok ||= checks_passed?
+    end
+
+    def checks_passed?
+      if blacklisted_wifi?
+        puts "Blacklisted Network; Won't go online"
+        return false
+      end
+
+      # we don't want to spam himawari's site more than once every 10 minutes while running on a schedule
+      return false if by_schedule && now.min % 10 != 1
+
+      if `find #{data_path} -name \"t_*.png\"`.length > 0
+        puts "Another himawari process is still downloading/processing files.\n" \
+             "(There are tiles (t_*.png) in the `data` folder.) Quitting w/o overlapping."
+        return false
+      end
+
+      if !internet_connection?
+        puts "Not online? Can't reach #{HIMAWARI_URL}"
+        return false
+      end
+      true
+    end
+
+    def last_iter?(from, to)
+      from.day == to.day && from.hour == to.hour
+    end
 
     def pics_updated?
       pics(latest_local[:timestamp], latest_remote) if not up_to_date?

@@ -1,5 +1,16 @@
 module Himawari
   module Process
+    private
+
+    def check_tiles
+      @control_size ||= File.size("#{app_root}/no_image.png")
+      bad_tiles = {}
+      Dir["#{data_path}/t_*.png"].each do |tile|
+        bad_tiles = process_bad_tiles(bad_tiles, tile) if bad_tile?(tile)
+      end
+      recover_bad_sectors(bad_tiles)
+    end
+
     def process_bad_tiles(bad_tiles, tile)
       begin
         i = File.basename(tile[0..-9])
@@ -21,6 +32,14 @@ module Himawari
       "#{stamp.year}/#{stamp.month}/#{stamp.day}/#{stamp.hour}#{stamp.min}00_#{tile_end}"
     end
 
+    def png?(file)
+      File.size(file) > 0 && IO.read(file, 4).force_encoding('utf-8') == "\x89PNG"
+    end
+
+    def bad_tile?(tile)
+      !png?(tile) || File.size(tile) == @control_size && system("cmp #{tile} #{app_root}/no_image.png")
+    end
+
     # bad_tiles structure: { "t_2019-11-11T0240": [ [ [tile_url_1, tile_url_2, tile_url_3] ], [array_of_tiles], [array_of_tiles] ] }
     def recover_bad_sectors(bad_tiles)
       bad_tiles.each do |bad_pic_name, sectors|
@@ -33,7 +52,7 @@ module Himawari
           tile = "#{data_path}/#{bad_pic_name}-#{sectors[0][-3,3]}.png"
           sectors.each do |bad_tile|
             `curl -sC - "#{HIMAWARI_URL}/#{resolution}d/550/#{bad_tile}.png" > #{tile}`
-            if File.size(tile) == control_size && system("cmp #{tile} #{APP_ROOT}/no_image.png") # yep, it's bad...
+            if bad_tile?(tile) # yep, it's bad...
               # File.delete(tile)
               pic_not_good = true
             else

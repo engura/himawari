@@ -15,12 +15,7 @@ module Himawari
     end
 
     def self.parse_cli_args
-      params = {
-        focus: :top,
-        mode: :day,
-        resolution: 2,
-        workdir: Pathname.new(File.expand_path('../', __FILE__))
-      }
+      params = {}
 
       OptionParser.new do |opts|
         opts.banner = "Usage: himawari [params]"
@@ -30,8 +25,9 @@ module Himawari
           params[:focus] = o.to_sym if o == 'full' or o == 'top' or o == 'mid' or o == 'low'
         end
 
-        opts.on("-m", "--mode STRING", String, "Valid values are `day` (cycles pics from the most recent day) or " \
-                                               "`live` (shows only the latest photo available). Default is `day`.") do |o|
+        opts.on("-m", "--mode STRING", String, "Valid values are `day` (cycles pics in the `destination` folder from the" \
+                                               "most recent day) or `live` (copies the latest photo downloaded to `destination`)" \
+                                               "Default is `day`.") do |o|
           params[:mode] = :live if o == 'live'
         end
 
@@ -41,14 +37,13 @@ module Himawari
           params[:resolution] = o if o <= 20 and o > 0 and o.even?
         end
 
-        opts.on("-d", "--destination PATH", String, "The folder where to copy the background image. If left blank, images will just " \
+        opts.on("-d", "--destination PATH", String, "The folder where to copy a background image. If left blank, images will just " \
                                                     "be downloaded, but won't be copied anywhere afterward.") do |o|
           params[:destination] = o if File.directory?(o)
         end
 
         opts.on("-w", "--workdir PATH", String, "The folder where to save all the downloaded pics. If left blank, images will be " \
-                                                "saved to the `./data` directory relative to the location of the executable... " \
-                                                "(Leaving it blank Will likely fail due to lack of Write permissions)") do |o|
+                                                "saved to the `./data` directory relative to your current path of working dir.") do |o|
           params[:workdir] = o if File.directory?(o)
         end
 
@@ -58,6 +53,10 @@ module Himawari
 
         opts.on("-v", "--verbose", "Increase verbosity: mostly for debugging") do |o|
           params[:verbose] = o
+        end
+
+        opts.on("-s", "--schedule", "Flag for determining when the script is run by schedule/automatically.") do |o|
+          params[:by_schedule] = o
         end
 
         opts.on("-h", "--help", "Prints this help & exits") do
@@ -73,6 +72,10 @@ module Himawari
       `echo "#!/bin/bash\n#{command}" > #{script}`
       `chmod +x #{script} && #{script}`
       `rm #{script}`
+    end
+
+    def self.tenmin(from = 0, to = 59)
+      "{#{from / 10}..#{to / 10}}"
     end
 
     # to force crossfade:
@@ -105,7 +108,7 @@ module Himawari
       if action == :set
         `(crontab -l ; echo \"#{cmd}\") 2>&1 | grep -v \"no crontab\" | sort | uniq | crontab -`
       else
-        `(crontab -l ; echo \"#{cmd}\") 2>&1 | grep -v \"no crontab\" | grep -v himawari.rb | sort | uniq | crontab -`
+        `(crontab -l ; echo \"#{cmd}\") 2>&1 | grep -v \"no crontab\" | grep -v himawari | sort | uniq | crontab -`
       end
     end
   end
