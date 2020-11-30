@@ -79,7 +79,7 @@ module Himawari
       # system(command1) # works totally fine on mac...
       # OOOK>> I have NO idea why linux is not parsing {..} from parallel above and instead sticks it as a literal,
       # but we need to make it work >> hack it this way for the time being...
-      script = "#{app_root}/script_#{yr}_#{yr}_#{mo}_#{dy}_#{hr}.sh"
+      script = "#{data_path}/script_#{yr}_#{yr}_#{mo}_#{dy}_#{hr}.sh"
       OsUtils.scriptify_sys(script, command1)
 
       check_tiles

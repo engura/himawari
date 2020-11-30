@@ -11,7 +11,7 @@ module Himawari
                        `iwgetid -r` # linux
                      end
       puts current_wifi if verbose
-      current_wifi && BLACK_LIST_WIFI.any? { |wifi| current_wifi.include?(wifi) }
+      current_wifi && blacklist_wifi.any? { |wifi| current_wifi.include?(wifi) }
     end
 
     def internet_connection?

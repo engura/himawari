@@ -50,6 +50,11 @@ module Himawari
           params[:workdir] = o if File.directory?(o)
         end
 
+        opts.on('-b', '--blacklist STRING,STRING...', Array, 'Blacklist SSIDs of networks from which we do not want to go ' \
+                                                             'online to download new images.') do |o|
+          params[:blacklist] = o
+        end
+
         opts.on('-c', '--cron STRING', String, 'Can `set`/`clear` cron with the specified params, so we can update the images ' \
                                                'automatically') do |o|
           params[:cron] = o.to_sym if %w[set clear].include? o
