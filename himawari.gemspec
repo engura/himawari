@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name          = 'himawari'
-  s.version       = '1.0.0'
+  s.version       = '0.1.0'
   s.date          = '2020-11-28'
   s.summary       = 'Grabs latest images from the himawari8 weather satellite'
   s.description   = 'Makes pretty, high-res backgrounds from the real-time photos of Earth by Himawari8,' \
