@@ -1,13 +1,28 @@
 # himawari
-access images from the [himawari8 weather satellite](https://himawari8.nict.go.jp)] and compose real-time Earth backgrounds/high-res images
+Access images from the [himawari8 weather satellite](https://himawari8.nict.go.jp)] (courtesy of NICT) and compose near real-time desktop backgrounds of Earth or use the high-res images for other personal uses.
 
-## Building the gem from source
-navigate to the gem's directory and...
+# Installation
+Add this line to your application's Gemfile:
 ```
-gem build himawari.gemspec
-gem install himawari-0.1.0.gem
+gem 'himawari'
 ```
+And then execute:
+```
+bundle
+```
+Or install it yourself as:
+```
+gem install himawari
+```
+## Install CLI Dependencies
+Mac:
+```
+brew install imagemagick # https://github.com/minimagick/minimagick
+brew install parallel # https://linux.die.net/man/1/parallel
+```
+or Linux: run `bin/setup`
 
+# Usage
 
 RUN EXAMPLE: ./himawari.rb -live -focus=top -resolution=8 -desktop='every desktop' -destination=/Users/vladimir/Pictures/live
 All args are optional & default to day cycle (every minute pic change); northern-hemisphere close up; 2-level res; set all desktops
@@ -26,6 +41,27 @@ then, save the last 24hrs in a folder... We can have 2 options: either show what
  - 3. keep only 1 day's worth of images (~144 photos)
  - 4. check for `No Image` images and skip those (until? if?) they become available
 
- install CLI dependencies:
- brew install imagemagick # https://github.com/minimagick/minimagick
- brew install parallel # https://linux.die.net/man/1/parallel
+# Development
+After checking out the repo, doing the steps in `installation` above and messing around with the code, run `rake test` and `rubocop` to use the tests and make sure everything is ok. To run a specific test, use `rake test TEST=spec/test_base.rb TESTOPTS="--name=test_bad_params --seed=1234"` and as for rubocop: `rubocop lib/himawari/base.rb`
+
+## Building the gem on local machine/from source
+navigate to the gem's directory and...
+Manually:
+```
+gem build himawari.gemspec
+gem install himawari-#.#.#.gem # replace the # with the most recent version
+```
+Semi-manually (the end result is same as above):
+```
+bundle exec rake install
+```
+
+## Releasing a new version of the Gem
+ - Update the version number in `himawari.gemspec`
+ - run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the .gem file to rubygems.org.
+
+# Contributing
+Bug reports and pull requests are welcome on GitHub at https://github.com/engura/himawari.
+
+# License
+The gem is available as open source under the terms of the MIT License.
