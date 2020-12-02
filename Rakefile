@@ -1,7 +1,11 @@
+# frozen-string-literal: true
+
 require 'rake/testtask'
 
-Rake::TestTask.new do |t|
-  t.libs << 'test'
+Rake::TestTask.new(:test) do |t|
+  t.libs << 'spec'
+  t.libs << 'lib'
+  t.test_files = FileList['spec/**/test_*.rb']
 end
 
 desc 'Run tests'

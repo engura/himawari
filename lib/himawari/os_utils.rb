@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Himawari
   # all the misc. functions for dealing with CLI and/or OS...
   module OsUtils

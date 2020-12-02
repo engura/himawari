@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+# frozen-string-literal: true
 
 require_relative './himawari/base.rb'
 require_relative './himawari/os_utils.rb'
@@ -10,7 +10,8 @@ require_relative './himawari/download.rb'
 # from HIMAWARI_URL (defined in the Base Class)
 module Himawari
   def self.autorun(params = {})
-    Download.new(params).start
+    h = Download.new(params)
+    h.cron_action ? h.crontab : h.update_backgrnd ^ h.start
   end
 
   def self.get_pic(params = {})

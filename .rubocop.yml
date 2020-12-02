@@ -38,7 +38,9 @@ Lint/StructNewOverride:
   Enabled: true
 
 Style/FrozenStringLiteralComment:
-  Enabled: false
+  Enabled: true
+  Exclude:
+    - exe/**/*
 
 Style/HashEachMethods:
   Enabled: true

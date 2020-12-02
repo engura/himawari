@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Himawari
   # Let's expand our basic Himawari class with the ability to actually download stuff
   # in addition to the downloading, we will also need to:
@@ -93,7 +95,7 @@ module Himawari
     private
 
     def everything_ok
-      @everything_ok ||= checks_passed?
+      @everything_ok ||= params_valid? && checks_passed?
     end
 
     def checks_passed?

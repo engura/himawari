@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+echo 'Installing CLI Dependencies'
+sudo apt-get install -y parallel imagemagick
+
+bundle install

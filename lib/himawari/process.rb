@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 module Himawari
   # these methods provide checking and (trying to) fix the Tiles that we downloaded from the web.
   # sometimes, the connection might be bad, and instead of an actual PNG for a Tile, we get a blank empty file.
