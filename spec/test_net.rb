@@ -5,11 +5,24 @@ require 'test_helper'
 class TestNet < HimawariTest
   # Do the main methods function w/o crashing?
   def test_get_pic
-    assert_equal true, Himawari.get_pic(datetime: '2020-06-01 01:30:00', workdir: @@workdir)
+    puts "Try to get a pic from #{@timestamp}"
+    assert_equal true, Himawari.get_pic(datetime: @timestamp, workdir: @@workdir)
+  end
+
+  def test_get_pic_blacklisted_wifi
+    current_wifi = if Himawari::OsUtils.os == :mac
+                     `networksetup -getairportnetwork en0`
+                   elsif Himawari::OsUtils.os == :linux
+                     `iwgetid -r`
+                   end
+
+    capture_stdout do
+      assert_equal false, Himawari.get_pic(datetime: @timestamp, workdir: @@workdir, blacklist: [current_wifi])
+    end
   end
 
   def test_get_pics
-    puts 'test_get_pics'
-    # assert_equal true, Himawari.get_pics(from: '2020-06-01 05:00:00', to: '2020-06-01 10:00:00', workdir: @@workdir)
+    puts "Try to get pics in #{@timestamp} ~ #{@timestamp + 3600 * 2}"
+    assert_equal true, Himawari.get_pics(from: @timestamp, to: @timestamp + 3600 * 2, workdir: @@workdir)
   end
 end

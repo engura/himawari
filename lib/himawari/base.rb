@@ -48,10 +48,10 @@ module Himawari
       false
     end
 
-    def set_background(img, destination_path)
-      return false unless destination_path && params_valid?
+    def background(img)
+      return false unless img && params_valid?
 
-      cmd = "sleep 10 ; rm #{destination_path}/*.png ; cp #{img} #{destination_path}"
+      cmd = "sleep 5 ; rm -f #{destination_path}/*.png ; cp #{img} #{destination_path}"
       # "osascript -e 'tell application \"System Events\" to tell DESKTOP to set picture to \"#{img}\"'"
       puts cmd if verbose
       system(cmd)
@@ -67,15 +67,17 @@ module Himawari
 
       i = (now.hour * 60 + now.min) / UPDATE_RATE % sexy_pics.count
       puts "#{i} :: #{(now.hour * 60 + now.min)} % #{sexy_pics.count} switching to #{sexy_pics[i]}" if verbose
-      set_background(sexy_pics[i], destination_path)
+      background(sexy_pics[i])
     end
 
-    def crontab
+    def crontab(action = nil)
+      @cron_action = action if action
       return false unless cron_action && params_valid?
 
       cmd = '* * * * * PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin himawari ' \
             "-s -m #{mode} -f #{focus} -r #{resolution} -d '#{destination_path}' -w '#{work_path}' -b #{blacklist_wifi.join(',')}"
       OsUtils.crontab(cmd, cron_action)
+      cmd
     end
 
     def params_valid?

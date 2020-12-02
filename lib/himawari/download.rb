@@ -12,9 +12,9 @@ module Himawari
     include Process
 
     def start
-      return false unless everything_ok
+      return false unless everything_ok && pics_updated?
 
-      set_background(latest_local[:filename], destination_path) if pics_updated? && mode == :live
+      set_background(latest_local[:filename], destination_path) if mode == :live
       # clean up: remove any files that are more than 2 days old
       `find #{data_path} -name \"*.png\" -type f -mtime +2 -exec rm -f {} \\;`
     end

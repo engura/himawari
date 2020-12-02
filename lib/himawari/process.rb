@@ -58,6 +58,7 @@ module Himawari
           puts "#{bad_pic_name} has #{sectors.count} pieces missing. Too many. Can't recover & will delete the whole thing!"
         else
           puts "#{bad_pic_name} has #{sectors.count} pieces missing. Will try to recover/fill in with older data."
+          p sectors
           tile = "#{data_path}/#{bad_pic_name}-#{sectors[0][-3, 3]}.png"
           sectors.each do |bad_tile|
             `curl -sC - "#{HIMAWARI_URL}/#{resolution}d/550/#{bad_tile}.png" > #{tile}`
