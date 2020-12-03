@@ -91,7 +91,7 @@ Himawari.get_pics(params)
 
 # TODO
 - improve documentation
-- add Windows support? #1
+- add [Windows support](https://github.com/engura/himawari/issues/1)?
 
 # Development
 After checking out the repo, doing the steps in `installation` above and messing around with the code, run `rake test` and `rubocop` to use the tests and make sure everything is ok. To run a specific test, use `rake test TEST=spec/test_base.rb TESTOPTS="--name=test_bad_params --seed=1234"` and as for rubocop: `rubocop lib/himawari/base.rb`
