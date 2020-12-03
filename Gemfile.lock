@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    himawari (0.1.0)
+    himawari (0.1.1)
       httparty (~> 0.17.3)
 
 GEM
