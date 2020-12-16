@@ -17,9 +17,8 @@ jobs:
             echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
             source $BASH_ENV
             gem install bundler:$BUNDLER_VERSION
-            bundle -v
-            bundle config set path 'vendor/bundle'
             bundle install --jobs 4 --retry 3
+            ls -l
       - run:
           name: rubocop
           command: |
