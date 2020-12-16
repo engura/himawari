@@ -34,7 +34,8 @@ class HimawariTest < Minitest::Test
 
   def self.cleanup
     puts "Cleanup: Removing #{@@workdir}/data"
-    `ls -la #{@@workdir}/data && rm -r #{@@workdir}/data*` if File.directory?("#{@@workdir}/data")
+    puts `ls -la #{@@workdir}/data`
+    `rm -r #{@@workdir}/data*` if File.directory?("#{@@workdir}/data")
   end
 end
 
