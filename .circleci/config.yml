@@ -18,7 +18,7 @@ jobs:
           name: Install Dependencies
           command: |
             gem update --system
-            gem install bundler
+            bundle update --bundler
             bundle -v
       #- run:
       #    name: Set bundle path
