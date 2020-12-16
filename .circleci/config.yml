@@ -7,7 +7,7 @@ jobs:
     docker:
       - image: circleci/ruby:2.5.1-stretch-node
         environment:
-          RAILS_ENV: test
+          BUNDLE_PATH: vendor/bundle
     executor: ruby/default
     steps:
       - checkout
@@ -19,10 +19,11 @@ jobs:
           command: |
             gem update --system
             bundle update --bundler
+      - run:
+          name: Set bundle path
+          command: |
+            bundle --path vendor/bundle
             bundle -v
-      #- run:
-      #    name: Set bundle path
-      #    command: bundle --path vendor/bundle
       - run:
           command: bundle install
       - run:
