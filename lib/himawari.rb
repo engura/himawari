@@ -1,10 +1,10 @@
 # frozen-string-literal: true
 
-require_relative './himawari/base.rb'
-require_relative './himawari/os_utils.rb'
-require_relative './himawari/net_utils.rb'
-require_relative './himawari/process.rb'
-require_relative './himawari/download.rb'
+require_relative './himawari/base'
+require_relative './himawari/os_utils'
+require_relative './himawari/net_utils'
+require_relative './himawari/process'
+require_relative './himawari/download'
 
 # encapsulates all the functions pertaining to acquiring images from the himawari8 satellite in near real-time
 # from HIMAWARI_URL (defined in the Base Class)

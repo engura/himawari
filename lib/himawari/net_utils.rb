@@ -10,7 +10,7 @@ module Himawari
       # puts "#{HIMAWARI_URL}/latest.json?uid=#{uid}" if verbose
       if r.code == 200
         puts "Latest Himawari: #{r['date']}" if verbose
-        @latest_remote = Time.parse(r['date'] + '+00:00')
+        @latest_remote = Time.parse("#{r['date']}+00:00")
         return true
       end
       false
@@ -19,9 +19,10 @@ module Himawari
     private
 
     def blacklisted_wifi?
-      current_wifi = if OsUtils.os == :mac
+      current_wifi = case OsUtils.os
+                     when :mac
                        `networksetup -getairportnetwork en0`
-                     elsif OsUtils.os == :linux
+                     when :linux
                        `iwgetid -r`
                      end
       puts current_wifi if verbose

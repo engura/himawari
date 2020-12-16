@@ -66,7 +66,7 @@ module Himawari
       return false unless sexy_pics
 
       i = (now.hour * 60 + now.min) / UPDATE_RATE % sexy_pics.count
-      puts "#{i} :: #{(now.hour * 60 + now.min)} % #{sexy_pics.count} switching to #{sexy_pics[i]}" if verbose
+      puts "#{i} :: #{now.hour * 60 + now.min} % #{sexy_pics.count} switching to #{sexy_pics[i]}" if verbose
       background(sexy_pics[i])
     end
 
@@ -124,7 +124,7 @@ module Himawari
       failsafe = { filename: nil, timestamp: Time.new(twodays_ago.year, twodays_ago.month, twodays_ago.day, 0, 0, 0, '+00:00') }
 
       Dir["#{data_path}/h_*.png"].each do |pic|
-        stamp = Time.parse(pic[0..-5].insert(-3, ':') + ':00+00:00')
+        stamp = Time.parse("#{pic[0..-5].insert(-3, ':')}:00+00:00")
         `touch -t #{stamp.strftime('%Y%m%d%H%M.%S')} #{pic}`
         latest = { filename: pic, timestamp: stamp } if !latest[:timestamp] || latest[:timestamp] < stamp
       end

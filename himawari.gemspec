@@ -18,11 +18,11 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(tests|spec|features)/})
   s.require_paths = ['lib']
 
-  s.metadata    = {
-    "homepage_uri" => "https://github.com/engura/himawari",
-    "changelog_uri" => "https://github.com/engura/himawari/blob/master/CHANGELOG.md",
-    "source_code_uri" => "https://github.com/engura/himawari",
-    "bug_tracker_uri" => "https://github.com/engura/himawari/issues",
+  s.metadata = {
+    'homepage_uri' => 'https://github.com/engura/himawari',
+    'changelog_uri' => 'https://github.com/engura/himawari/blob/master/CHANGELOG.md',
+    'source_code_uri' => 'https://github.com/engura/himawari',
+    'bug_tracker_uri' => 'https://github.com/engura/himawari/issues'
   }
 
   s.required_ruby_version = '>= 2.5'

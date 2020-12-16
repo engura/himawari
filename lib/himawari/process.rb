@@ -22,8 +22,8 @@ module Himawari
     def process_bad_tiles(bad_tiles, tile)
       i = File.basename(tile[0..-9])
       ending = tile[-7, 3]
-      stamp = Time.parse(i.dup.insert(-3, ':') + ':00+00:00')
-      bad_tiles[i] = [] unless bad_tiles.dig(i)
+      stamp = Time.parse("#{i.dup.insert(-3, ':')}:00+00:00")
+      bad_tiles[i] = [] unless bad_tiles[i]
       bad_tiles[i] << [
         himawari_format(stamp, ending),
         himawari_format(stamp - 600, ending),

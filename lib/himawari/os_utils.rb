@@ -4,13 +4,14 @@ module Himawari
   # all the misc. functions for dealing with CLI and/or OS...
   module OsUtils
     def self.os
-      if RUBY_PLATFORM =~ /win32/
+      case RUBY_PLATFORM
+      when /win32/
         :win
-      elsif RUBY_PLATFORM =~ /linux/
+      when /linux/
         :linux
-      elsif RUBY_PLATFORM =~ /darwin/
+      when /darwin/
         :mac
-      elsif RUBY_PLATFORM =~ /freebsd/
+      when /freebsd/
         :freebsd
       else
         :unknown

@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 require 'minitest/autorun'
-require_relative '../lib/himawari.rb'
+require_relative '../lib/himawari'
 
 class HimawariTest < Minitest::Test
   # rubocop:disable Style/ClassVars

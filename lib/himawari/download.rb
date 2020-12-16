@@ -130,9 +130,10 @@ module Himawari
 
     def download_region
       x = "{0..#{resolution - 1}}"
-      y = if focus == :top # :full :mid :low
+      y = case focus # :full :mid :low
+          when :top
             "{0..#{(resolution / MONITOR_ASPECT).ceil - 1}}"
-          elsif focus == :low
+          when :low
             "{#{resolution - (resolution / MONITOR_ASPECT).ceil}..#{resolution - 1}}"
           else # full / mid
             "{0..#{resolution - 1}}"
