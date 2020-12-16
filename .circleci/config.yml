@@ -30,13 +30,10 @@ jobs:
           at: .
       - run:
           name: Just Playing Around
-          command: |
-            ./bin/setup
-            mkdir $CUSTOM_VAR && touch $CUSTOM_VAR/some_special_file
+          command: mkdir $CUSTOM_VAR && touch $CUSTOM_VAR/some_special_file
       - persist_to_workspace:
           root: .
           paths:
-            - .
             - whatever
 
   bundle_audit:
@@ -62,10 +59,10 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Test
           command: |
             ls -l $CUSTOM_VAR
-            ./bin/setup
-            bundle exec rake test
+            ./bin/setup && bundle exec rake test
 
 workflows:
   version: 2
