@@ -8,7 +8,7 @@ executors:
       - image: circleci/ruby:2.5.1-node
         environment:
           BUNDLE_PATH: vendor/bundle
-    working_directory: /tmp
+    working_directory: /himawari
 
 jobs:
   checkout_code:
