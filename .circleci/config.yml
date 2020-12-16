@@ -14,6 +14,12 @@ jobs:
       - run:
           name: Which bundler?
           command: bundle -v
+      - run:
+          name: Install Dependencies
+          command: |
+            gem update --system
+            gem install bundler
+            bundle -v
       #- run:
       #    name: Set bundle path
       #    command: bundle --path vendor/bundle
