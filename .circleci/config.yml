@@ -23,12 +23,12 @@ jobs:
             source $BASH_ENV
             gem install bundler:$BUNDLER_VERSION
             echo $GEM_HOME
-            gem env
+            echo $BUNDLE_PATH
       - persist_to_workspace:
           root: .
           paths:
             - .
-            - vendor/bundle
+            - /usr/local/bundle
 
   build:
     executor: super-ruby
