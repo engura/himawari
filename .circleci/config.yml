@@ -35,7 +35,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - $CUSTOM_VAR
+            - whatever
 
   bundle_audit:
     executor: super-ruby
