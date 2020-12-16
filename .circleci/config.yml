@@ -16,13 +16,14 @@ jobs:
       - attach_workspace:
           at: .
       - checkout
-      - ruby/install-deps
       - run:
           name: Install Dependencies
           command: |
             echo $BUNDLE_PATH
             ls -la $BUNDLE_PATH
             ls -la $BUNDLE_PATH/gems
+      - ruby/install-deps:
+        path: $BUNDLE_PATH
       - persist_to_workspace:
           root: .
           paths:
