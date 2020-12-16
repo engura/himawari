@@ -16,6 +16,7 @@ jobs:
           command: |
             gem install bundler:2.1.4
             bundle -v
+            bundle install --path vendor/bundle --jobs 4 --retry 3
       - run:
           name: rubocop
           command: bundle exec rubocop
