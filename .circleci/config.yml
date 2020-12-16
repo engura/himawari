@@ -28,11 +28,6 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - restore_cache:
-          name: Restore bundle cache
-          keys:
-            - v2-himawari-bundle-{{ checksum "Gemfile.lock" }}-{{ arch }}
-            - v2-himawari-bundle-
       - run:
           name: Install Important Stuff
           command: |
@@ -40,15 +35,10 @@ jobs:
             echo 'installing!'
             echo $CUSTOM_VAR
             ls -al
-      - save_cache:
-          name: Store bundle cache
-          key: v2-himawari-bundle-{{ checksum "Gemfile.lock" }}-{{ arch }}
-          paths:
-            - vendor/bundle
       - persist_to_workspace:
           root: .
           paths:
-            - vendor/bundle
+            - .
 
   rubocop:
     executor: super-ruby
