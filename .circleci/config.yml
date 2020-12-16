@@ -1,6 +1,4 @@
 version: 2.1
-orbs:
-  ruby: circleci/ruby@0.1.2 
 
 jobs:
   build:
@@ -14,7 +12,6 @@ jobs:
       - run:
           name: Install Dependencies
           command: |
-            gem uninstall bundler
             gem install bundler
             bundle -v
       - run:
