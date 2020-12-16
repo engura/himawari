@@ -14,6 +14,7 @@ jobs:
       - run:
           name: Install Dependencies
           command: |
+            gem install bundler:2.1.4
             bundle -v
       - run:
           name: rubocop
