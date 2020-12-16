@@ -14,15 +14,11 @@ jobs:
       - run:
           name: Install Dependencies
           command: |
+            bundle -v
             gem update --system
             gem install bundler
-            bundle -v
-      - run:
-          name: Set bundle path
-          command: |
             bundle --path vendor/bundle
             bundle -v
-      - run:
-          command: bundle install
+            bundle install --jobs=4 --retry=3
       - run:
           command: bundle exec rubocop
