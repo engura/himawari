@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name          = 'himawari'
-  s.version       = '0.1.1'
+  s.version       = '0.1.2'
   s.date          = '2020-12-15'
   s.summary       = 'Grabs latest images from the himawari8 weather satellite'
   s.description   = 'Makes pretty, high-res backgrounds from the real-time photos of Earth by Himawari8, ' \
@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.homepage      = 'https://github.com/engura/himawari'
   s.license       = 'MIT'
 
-  s.files         = `git ls-files -- . ':!:*.png'`.split
+  s.files         = `git ls-files -- . ':!:*.png'`.split + ['lib/himawari/no_image.png']
   s.bindir        = 'exe'
   s.executables   = s.files.grep(%r{^exe/}) { |f| File.basename(f) }
   s.test_files    = s.files.grep(%r{^(tests|spec|features)/})
