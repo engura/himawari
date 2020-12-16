@@ -6,10 +6,16 @@ jobs:
   build:
     docker:
       - image: circleci/ruby:2.5.1-stretch-node
+        environment:
+          RAILS_ENV: test
     executor: ruby/default
     steps:
       - checkout
       - run:
           name: Which bundler?
           command: bundle -v
-      # - ruby/bundle-install
+      #- run:
+      #    name: Set bundle path
+      #    command: bundle --path vendor/bundle
+      - run:
+          command: bundle exec rubocop
