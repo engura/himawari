@@ -8,6 +8,7 @@ executors:
       - image: cimg/ruby:2.5-node
         environment:
           BUNDLE_PATH: vendor/bundle
+          CUSTOM_VAR: whatever
 
 jobs:
   checkout_code:
@@ -18,17 +19,9 @@ jobs:
       - checkout
       - ruby/install-deps:
         path: $BUNDLE_PATH
-      - run:
-          name: Install Dependencies
-          command: |
-            echo $BUNDLE_PATH
-            ls -la $BUNDLE_PATH
-            ls -la $BUNDLE_PATH/gems
       - persist_to_workspace:
           root: .
-          paths:
-            - .
-            - vendor/bundle
+          paths: .
 
   build:
     executor: super-ruby
@@ -45,6 +38,7 @@ jobs:
           command: |
             bundle install --jobs 4 --retry 3
             echo 'installing!'
+            echo $CUSTOM_VAR
             ls -al
       - save_cache:
           name: Store bundle cache
