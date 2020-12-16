@@ -5,7 +5,7 @@ orbs:
 jobs:
   build:
     docker:
-      - image: circleci/ruby:2.5.1-stretch-node
+      - image: circleci/ruby:2.6.0-stretch-node
         environment:
           BUNDLE_PATH: vendor/bundle
     executor: ruby/default
@@ -15,10 +15,6 @@ jobs:
           name: Install Dependencies
           command: |
             bundle -v
-            gem update --system
-            gem install bundler
-            bundle --path vendor/bundle
-            bundle -v
-            bundle install --jobs=4 --retry=3
       - run:
+          name: rubocop
           command: bundle exec rubocop
