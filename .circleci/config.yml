@@ -1,11 +1,11 @@
 version: 2.1
 orbs:
-  ruby: circleci/ruby@0.1.2 
+  ruby: circleci/ruby@1.1.2
 
 executors:
   super-ruby:
     docker:
-      - image: circleci/ruby:2.5.1-node
+      - image: cimg/ruby:2.5-node
         environment:
           BUNDLE_PATH: vendor/bundle
 
@@ -16,15 +16,13 @@ jobs:
       - attach_workspace:
           at: .
       - checkout
+      - ruby/install-deps
       - run:
           name: Install Dependencies
           command: |
-            echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
-            source $BASH_ENV
-            gem install bundler:$BUNDLER_VERSION --install-dir $BUNDLE_PATH
-            echo $GEM_HOME
             echo $BUNDLE_PATH
             ls -la $BUNDLE_PATH
+            ls -la $BUNDLE_PATH/gems
       - persist_to_workspace:
           root: .
           paths:
@@ -74,6 +72,7 @@ jobs:
           when: always
           command: |
             bundle -v
+            ls -la $BUNDLE_PATH/gems
             gem install bundle-audit && bundle-audit update && bundle-audit check
 
 workflows:
