@@ -1,6 +1,29 @@
 #!/usr/bin/env bash
 echo 'Installing CLI Dependencies'
-sudo apt-get update && sudo apt-get install -y parallel imagemagick wireless-tools
-yes 'will cite' | parallel --citation
 
-bundle install
+ERR_MESSG="Didn't test under this environment; nothing installed.\nPlease try to install parallel && imagemagick utils manually!"
+
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    sudo apt-get update && sudo apt-get install -y parallel imagemagick wireless-tools
+    yes 'will cite' | parallel --citation
+    bundle install
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    brew install imagemagick parallel
+    yes 'will cite' | parallel --citation
+    bundle install
+elif [[ "$OSTYPE" == "cygwin" ]]; then
+    # POSIX compatibility layer and Linux environment emulation for Windows
+    echo $ERR_MESSG
+elif [[ "$OSTYPE" == "msys" ]]; then
+    # Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
+    echo $ERR_MESSG
+elif [[ "$OSTYPE" == "win32" ]]; then
+    # I'm not sure this can happen.
+    echo $ERR_MESSG
+elif [[ "$OSTYPE" == "freebsd"* ]]; then
+    # ...
+    echo $ERR_MESSG
+else
+    # Unknown.
+    echo $ERR_MESSG
+fi

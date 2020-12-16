@@ -10,6 +10,9 @@ module Himawari
   module Process
     private
 
+    # Checks all the tiles downloaded for valid content.
+    # Aims to throw out either empty tiles, or the weird "no-image" pngs
+    # @return true on success
     def check_tiles
       @control_size ||= File.size("#{app_root}/no_image.png")
       bad_tiles = {}
@@ -19,6 +22,12 @@ module Himawari
       recover_bad_sectors(bad_tiles)
     end
 
+    # Called from the loop in `check_tiles`. Does the dirty work of actually checking each tile
+    # @param bad_tiles [Array <String>] the array that gets supplemented w/ any new tiles
+    # @param tile [String] the yet-unknown-to-be-good tile image we just downloaded from the net
+    # @return [Array <String>] of bad tile filenames
+    # bad_tiles structure:
+    # { "t_2019-11-11T0240": [ [ [tile_url_1, tile_url_2, tile_url_3] ], [array_of_tiles], [array_of_tiles] ] }
     def process_bad_tiles(bad_tiles, tile)
       i = File.basename(tile[0..-9])
       ending = tile[-7, 3]
@@ -36,20 +45,32 @@ module Himawari
       bad_tiles
     end
 
+    # @param stamp [DateTime]
+    # @param tile_end [String] the tail of the tile's filename. its extension?
+    # @return [String] the format of how the images are named on the himawari website
     def himawari_format(stamp, tile_end)
       "#{stamp.year}/#{stamp.month}/#{stamp.day}/#{stamp.hour}#{stamp.min}00_#{tile_end}"
     end
 
+    # verifies `file` to be an actual png
+    # @param file [String]
+    # @return true if the file provided is a PNG; false otherwise
     def png?(file)
       File.size(file).positive? && IO.read(file, 4).force_encoding('utf-8') == "\x89PNG"
     end
 
+    # verifies the `tile` to be a good png and not a "no_image.png"
+    # @param tile [String] filename
+    # @return true if the tile is ok; false otherwise
     def bad_tile?(tile)
       !png?(tile) || File.size(tile) == @control_size && system("cmp #{tile} #{app_root}/no_image.png")
     end
 
-    # bad_tiles structure:
-    # { "t_2019-11-11T0240": [ [ [tile_url_1, tile_url_2, tile_url_3] ], [array_of_tiles], [array_of_tiles] ] }
+    # attempts to recover the tiles in the `bad_tiles` array by downloading them again
+    # or downloading a slightly older tile in the same position as the problem tile
+    # @param bad_tiles [Array]
+    # @return a message to the user of the conditional success of the tiles' recovery
+    #    usually it deletes the whole image upon recovery failure... :(
     def recover_bad_sectors(bad_tiles)
       bad_tiles.each do |bad_pic_name, sectors|
         pic_not_good = true
