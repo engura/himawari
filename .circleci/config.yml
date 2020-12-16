@@ -55,7 +55,9 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - run: bundle exec rubocop
+      - run: |
+        ls -al
+        bundle exec rubocop
 
   bundle_audit:
     executor: super-ruby
@@ -67,7 +69,7 @@ jobs:
           when: always
           command: |
             bundle -v
-            ls -la $BUNDLE_PATH/gems
+            ls -la
             gem install bundle-audit && bundle-audit update && bundle-audit check
 
 workflows:
