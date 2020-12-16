@@ -43,8 +43,8 @@ gem install himawari
 ## Install CLI Dependencies
 Mac/Linux: run `bin/setup`
 On other systems, please try to install `imagemagick` and `parallel` utilities manually...
-(https://linux.die.net/man/1/parallel)
-(https://github.com/minimagick/minimagick)
+https://linux.die.net/man/1/parallel
+https://github.com/minimagick/minimagick
 
 # Usage
 
