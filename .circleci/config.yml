@@ -32,11 +32,11 @@ jobs:
           name: Just Playing Around
           command: |
             echo $CUSTOM_VAR
-            bundle exec rubocop
-            mkdir ^something && touch ^something/weird
+            mkdir something && touch something/weird
       - persist_to_workspace:
           root: .
-          paths: .
+          paths:
+            - something
 
   bundle_audit:
     executor: super-ruby
@@ -64,6 +64,7 @@ jobs:
           command: |
             echo $CUSTOM_VAR
             ls -la
+            ls -l 'something'
             rake test
 
 workflows:
