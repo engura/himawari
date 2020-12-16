@@ -12,13 +12,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Which bundler?
-          command: bundle -v
-      - run:
           name: Install Dependencies
           command: |
-            gem update --system
+            gem uninstall bundler
             gem install bundler
+            bundle -v
       - run:
           name: Set bundle path
           command: |
