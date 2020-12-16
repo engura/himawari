@@ -23,7 +23,8 @@ jobs:
             source $BASH_ENV
             gem install bundler:$BUNDLER_VERSION
             bundle install --jobs 4 --retry 3
-            ls -la /
+            ls -la /var/lib/gems
+            pwd
       - persist_to_workspace:
           root: .
           paths: .
