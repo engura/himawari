@@ -18,7 +18,7 @@ jobs:
             source $BASH_ENV
             gem install bundler:$BUNDLER_VERSION
             bundle install --jobs 4 --retry 3
-            ls -l
+            ls -al
       - run:
           name: rubocop
           command: |
