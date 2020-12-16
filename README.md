@@ -7,7 +7,6 @@
 
 [![gem_version](https://img.shields.io/gem/v/himawari)](https://rubygems.org/gems/himawari)
 [![gem_dl](https://img.shields.io/gem/dt/himawari)](https://rubygems.org/gems/himawari)
-
 ![lines](https://img.shields.io/tokei/lines/github/engura/himawari)
 ![size](https://img.shields.io/github/languages/code-size/engura/himawari)
 [![license](https://img.shields.io/github/license/engura/himawari)](https://opensource.org/licenses/MIT)

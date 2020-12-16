@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'minitest', '~> 5.14.0'
   s.add_development_dependency 'pry', '~> 0.13.1'
   s.add_development_dependency 'rake', '~> 13.0.1'
+  s.add_development_dependency 'rubocop', '~> 1.6'
 
   s.requirements << 'Mac OSX or Linux... Windows `not supported yet` due to the lack of the following:'
   s.requirements << 'parallel, ~>20161222 (Let\'s download in parallel)'

@@ -18,4 +18,6 @@ jobs:
       #    name: Set bundle path
       #    command: bundle --path vendor/bundle
       - run:
+          command: bundle install
+      - run:
           command: bundle exec rubocop
