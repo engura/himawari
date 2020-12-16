@@ -3,7 +3,19 @@ orbs:
   ruby: circleci/ruby@0.1.2 
 
 jobs:
+  checkout_code:
+    docker:
+      - image: circleci/ruby:2.5.1-node
+    steps:
+      - attach_workspace:
+          at: .
+      - checkout
+      - persist_to_workspace:
+          root: .
+          paths: .
+
   build:
+    # working_directory: ~/himawari
     docker:
       - image: circleci/ruby:2.5.1-node
     executor: ruby/default
@@ -44,3 +56,31 @@ jobs:
           at: .
       - run:
           command: bundle exec rubocop
+
+  bundle_audit:
+    docker:
+      - image: circleci/ruby:2.5.1-node
+        environment:
+          BUNDLE_PATH: vendor/bundle
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Bundle Audit
+          when: always
+          command: gem install bundle-audit && bundle-audit update && bundle-audit check
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - checkout_code
+      - build:
+          requires:
+            - checkout_code
+      - bundle_audit:
+          requires:
+            - checkout_code
+      - rubocop:
+          requires:
+            - build
