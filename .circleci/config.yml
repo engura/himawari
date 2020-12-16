@@ -10,19 +10,6 @@ jobs:
       - attach_workspace:
           at: .
       - checkout
-      - persist_to_workspace:
-          root: .
-          paths: .
-
-  build:
-    # working_directory: ~/himawari
-    docker:
-      - image: circleci/ruby:2.5.1-node
-    executor: ruby/default
-    steps:
-      - attach_workspace:
-          at: .
-      - checkout
       - run:
           name: Install Dependencies
           command: |
@@ -30,11 +17,28 @@ jobs:
             source $BASH_ENV
             gem install bundler:$BUNDLER_VERSION
             bundle install --jobs 4 --retry 3
+      - persist_to_workspace:
+          root: .
+          paths: .
+
+  build:
+    working_directory: ~/himawari
+    docker:
+      - image: circleci/ruby:2.5.1-node
+    # executor: ruby/default
+    steps:
+      - attach_workspace:
+          at: .
       - restore_cache:
           name: Restore bundle cache
           keys:
             - v2-himawari-bundle-{{ checksum "Gemfile.lock" }}-{{ arch }}
             - v2-himawari-bundle-
+      - run:
+          name: Install Important Stuff
+          command: |
+            echo 'installing!'
+            ls -al
       - save_cache:
           name: Store bundle cache
           key: v2-himawari-bundle-{{ checksum "Gemfile.lock" }}-{{ arch }}
@@ -50,7 +54,7 @@ jobs:
       - image: circleci/ruby:2.5.1-node
         environment:
           BUNDLE_PATH: vendor/bundle
-    executor: ruby/default
+    # executor: ruby/default
     steps:
       - attach_workspace:
           at: .
