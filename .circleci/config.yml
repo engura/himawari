@@ -23,7 +23,7 @@ jobs:
             source $BASH_ENV
             gem install bundler:$BUNDLER_VERSION
             bundle install --jobs 4 --retry 3
-            ls -la /var/lib/gems
+            ls -la vendor/bundle
             pwd
       - persist_to_workspace:
           root: .
@@ -69,7 +69,9 @@ jobs:
       - run:
           name: Bundle Audit
           when: always
-          command: gem install bundle-audit && bundle-audit update && bundle-audit check
+          command: |
+            bundle -v
+            gem install bundle-audit && bundle-audit update && bundle-audit check
 
 workflows:
   version: 2
