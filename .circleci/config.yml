@@ -64,6 +64,7 @@ jobs:
       - run:
           command: |
             ls -l $CUSTOM_VAR
+            ./bin/setup
             bundle exec rake test
 
 workflows:
