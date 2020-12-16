@@ -1,24 +1,92 @@
 version: 2.1
 orbs:
-  ruby: circleci/ruby@0.1.2 
+  ruby: circleci/ruby@1.1.2
 
-jobs:
-  build:
+executors:
+  super-ruby:
     docker:
-      - image: circleci/ruby:2.5.0-node
+      - image: cimg/ruby:2.5-node
         environment:
           BUNDLE_PATH: vendor/bundle
-    executor: ruby/default
+
+jobs:
+  checkout_code:
+    executor: super-ruby
     steps:
+      - attach_workspace:
+          at: .
       - checkout
+      - ruby/install-deps:
+        path: $BUNDLE_PATH
       - run:
           name: Install Dependencies
           command: |
-            echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
-            source $BASH_ENV
-            gem install bundler:$BUNDLER_VERSION
-            bundle install --jobs 4 --retry 3
+            echo $BUNDLE_PATH
+            ls -la $BUNDLE_PATH
+            ls -la $BUNDLE_PATH/gems
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+            - vendor/bundle
+
+  build:
+    executor: super-ruby
+    steps:
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          name: Restore bundle cache
+          keys:
+            - v2-himawari-bundle-{{ checksum "Gemfile.lock" }}-{{ arch }}
+            - v2-himawari-bundle-
       - run:
-          name: rubocop
+          name: Install Important Stuff
           command: |
-            bundle exec rubocop
+            bundle install --jobs 4 --retry 3
+            echo 'installing!'
+            ls -al
+      - save_cache:
+          name: Store bundle cache
+          key: v2-himawari-bundle-{{ checksum "Gemfile.lock" }}-{{ arch }}
+          paths:
+            - vendor/bundle
+      - persist_to_workspace:
+          root: .
+          paths:
+            - vendor/bundle
+
+  rubocop:
+    executor: super-ruby
+    steps:
+      - attach_workspace:
+          at: .
+      - run: bundle exec rubocop
+
+  bundle_audit:
+    executor: super-ruby
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Bundle Audit
+          when: always
+          command: |
+            bundle -v
+            ls -la $BUNDLE_PATH/gems
+            gem install bundle-audit && bundle-audit update && bundle-audit check
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - checkout_code
+      - build:
+          requires:
+            - checkout_code
+      - bundle_audit:
+          requires:
+            - checkout_code
+      - rubocop:
+          requires:
+            - build
