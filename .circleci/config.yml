@@ -1,0 +1,83 @@
+version: 2.1
+orbs:
+  ruby: circleci/ruby@1.1.2
+
+executors:
+  super-ruby:
+    docker:
+      - image: cimg/ruby:2.5-node
+        environment:
+          BUNDLE_PATH: vendor/bundle
+          CUSTOM_VAR: whatever
+
+jobs:
+  checkout_code:
+    executor: super-ruby
+    steps:
+      - attach_workspace:
+          at: .
+      - checkout
+      - ruby/install-deps: # aka bundle install
+        path: $BUNDLE_PATH
+      - persist_to_workspace:
+          root: .
+          paths: .
+
+  build:
+    executor: super-ruby
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Just Playing Around
+          command: mkdir $CUSTOM_VAR && touch $CUSTOM_VAR/some_special_file
+      - persist_to_workspace:
+          root: .
+          paths:
+            - whatever
+
+  bundle_audit:
+    executor: super-ruby
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Bundle Audit
+          when: always
+          command: gem install bundle-audit && bundle-audit update && bundle-audit check
+
+  rubocop:
+    executor: super-ruby
+    steps:
+      - attach_workspace:
+          at: .
+      - run: bundle exec rubocop
+
+  spec:
+    executor: super-ruby
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Test
+          command: |
+            ls -l $CUSTOM_VAR
+            ./bin/setup && bundle exec rake test
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - checkout_code
+      - build:
+          requires:
+            - checkout_code
+      - bundle_audit:
+          requires:
+            - checkout_code
+      - rubocop:
+          requires:
+            - build
+      - spec:
+          requires:
+            - build

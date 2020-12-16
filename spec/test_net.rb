@@ -10,9 +10,10 @@ class TestNet < HimawariTest
   end
 
   def test_get_pic_blacklisted_wifi
-    current_wifi = if Himawari::OsUtils.os == :mac
+    current_wifi = case Himawari::OsUtils.os
+                   when :mac
                      `networksetup -getairportnetwork en0`
-                   elsif Himawari::OsUtils.os == :linux
+                   when :linux
                      `iwgetid -r`
                    end
 

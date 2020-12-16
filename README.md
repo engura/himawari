@@ -1,4 +1,19 @@
-# TOC
+# himawari
+
+![tech-debt](https://img.shields.io/codeclimate/tech-debt/engura/himawari)
+[![maintainability](https://img.shields.io/codeclimate/maintainability-percentage/engura/himawari)](https://codeclimate.com/github/engura/himawari)
+[![Inline docs](https://inch-ci.org/github/engura/himawari.svg?branch=main)](https://inch-ci.org/github/engura/himawari)
+[![build](https://img.shields.io/circleci/build/github/engura/himawari)](https://app.circleci.com/pipelines/github/engura/himawari)
+
+[![gem_version](https://img.shields.io/gem/v/himawari)](https://rubygems.org/gems/himawari)
+[![gem_dl](https://img.shields.io/gem/dt/himawari)](https://rubygems.org/gems/himawari)
+![lines](https://img.shields.io/tokei/lines/github/engura/himawari)
+![size](https://img.shields.io/github/languages/code-size/engura/himawari)
+[![license](https://img.shields.io/github/license/engura/himawari)](https://opensource.org/licenses/MIT)
+
+<details>
+ <summary>TOC</summary>
+
 - [about](#himawari)
 - [installing](#installation)
 - [using](#usage)
@@ -6,8 +21,8 @@
 - [development](#development)
 - [contributing](#contributing)
 - [license](#license)
+</details>
 
-# himawari
 Access images from the [himawari8 weather satellite](https://himawari8.nict.go.jp)] (courtesy of NICT) and compose near real-time desktop backgrounds of Earth or use the high-res images for other personal uses. For example....
 ![full globe](doc/img/h_2020-06-01T0100.png)
 ![high res section](doc/img/h_2020-11-29T0110.png)
@@ -26,12 +41,10 @@ Or install it yourself as:
 gem install himawari
 ```
 ## Install CLI Dependencies
-Mac:
-```
-brew install imagemagick # https://github.com/minimagick/minimagick
-brew install parallel # https://linux.die.net/man/1/parallel
-```
-or Linux: run `bin/setup`
+Mac/Linux: run `bin/setup`
+On other systems, please try to install `imagemagick` and `parallel` utilities manually...
+https://linux.die.net/man/1/parallel
+https://github.com/minimagick/minimagick
 
 # Usage
 
