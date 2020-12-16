@@ -17,7 +17,7 @@ jobs:
       - attach_workspace:
           at: .
       - checkout
-      - ruby/install-deps:
+      - ruby/install-deps: # aka bundle install
         path: $BUNDLE_PATH
       - persist_to_workspace:
           root: .
@@ -29,26 +29,14 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Install Important Stuff
+          name: Just Playing Around
           command: |
-            bundle install --jobs 4 --retry 3
-            echo 'installing!'
             echo $CUSTOM_VAR
-            ls -al
+            bundle exec rubocop
+            mkdir ^something && touch ^something/weird
       - persist_to_workspace:
           root: .
-          paths:
-            - .
-
-  rubocop:
-    executor: super-ruby
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          command: |
-            ls -al
-            bundle exec rubocop
+          paths: .
 
   bundle_audit:
     executor: super-ruby
@@ -58,10 +46,25 @@ jobs:
       - run:
           name: Bundle Audit
           when: always
+          command: gem install bundle-audit && bundle-audit update && bundle-audit check
+
+  rubocop:
+    executor: super-ruby
+    steps:
+      - attach_workspace:
+          at: .
+      - run: bundle exec rubocop
+
+  spec:
+    executor: super-ruby
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
           command: |
-            bundle -v
+            echo $CUSTOM_VAR
             ls -la
-            gem install bundle-audit && bundle-audit update && bundle-audit check
+            rake test
 
 workflows:
   version: 2
@@ -75,5 +78,8 @@ workflows:
           requires:
             - checkout_code
       - rubocop:
+          requires:
+            - build
+      - spec:
           requires:
             - build
