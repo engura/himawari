@@ -31,12 +31,11 @@ jobs:
       - run:
           name: Just Playing Around
           command: |
-            echo $CUSTOM_VAR
-            mkdir something && touch something/weird
+            mkdir $CUSTOM_VAR && touch $CUSTOM_VAR/some_special_file
       - persist_to_workspace:
           root: .
           paths:
-            - something
+            - $CUSTOM_VAR
 
   bundle_audit:
     executor: super-ruby
@@ -62,10 +61,8 @@ jobs:
           at: .
       - run:
           command: |
-            echo $CUSTOM_VAR
-            ls -la
-            ls -l 'something'
-            rake test
+            ls -l $CUSTOM_VAR
+            bundle exec rake test
 
 workflows:
   version: 2
