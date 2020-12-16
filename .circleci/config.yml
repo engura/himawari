@@ -55,9 +55,10 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - run: |
-        ls -al
-        bundle exec rubocop
+      - run:
+        command: |
+          ls -al
+          bundle exec rubocop
 
   bundle_audit:
     executor: super-ruby
