@@ -2,10 +2,17 @@ version: 2.1
 orbs:
   ruby: circleci/ruby@0.1.2 
 
-jobs:
-  checkout_code:
+executors:
+  super-ruby:
     docker:
       - image: circleci/ruby:2.5.1-node
+        environment:
+          BUNDLE_PATH: vendor/bundle
+    working_directory: /tmp
+
+jobs:
+  checkout_code:
+    executor: super-ruby
     steps:
       - attach_workspace:
           at: .
@@ -17,15 +24,13 @@ jobs:
             source $BASH_ENV
             gem install bundler:$BUNDLER_VERSION
             bundle install --jobs 4 --retry 3
+            ls -la /
       - persist_to_workspace:
           root: .
           paths: .
 
   build:
-    working_directory: ~/himawari
-    docker:
-      - image: circleci/ruby:2.5.1-node
-    # executor: ruby/default
+    executor: super-ruby
     steps:
       - attach_workspace:
           at: .
@@ -50,22 +55,14 @@ jobs:
             - vendor/bundle
 
   rubocop:
-    docker:
-      - image: circleci/ruby:2.5.1-node
-        environment:
-          BUNDLE_PATH: vendor/bundle
-    # executor: ruby/default
+    executor: super-ruby
     steps:
       - attach_workspace:
           at: .
-      - run:
-          command: bundle exec rubocop
+      - run: bundle exec rubocop
 
   bundle_audit:
-    docker:
-      - image: circleci/ruby:2.5.1-node
-        environment:
-          BUNDLE_PATH: vendor/bundle
+    executor: super-ruby
     steps:
       - attach_workspace:
           at: .
