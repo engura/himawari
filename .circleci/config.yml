@@ -46,9 +46,9 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-        command: |
-          ls -al
-          bundle exec rubocop
+          command: |
+            ls -al
+            bundle exec rubocop
 
   bundle_audit:
     executor: super-ruby
