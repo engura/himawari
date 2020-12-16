@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 echo 'Installing CLI Dependencies'
-sudo apt-get install -y parallel imagemagick
+sudo apt-get install -y parallel imagemagick wireless-tools
 
 bundle install
