@@ -18,11 +18,11 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(tests|spec|features)/})
   s.require_paths = ['lib']
 
-  s.metadata    = {
-    "homepage_uri" => "https://github.com/engura/himawari",
-    "changelog_uri" => "https://github.com/engura/himawari/blob/master/CHANGELOG.md",
-    "source_code_uri" => "https://github.com/engura/himawari",
-    "bug_tracker_uri" => "https://github.com/engura/himawari/issues",
+  s.metadata = {
+    'homepage_uri' => 'https://github.com/engura/himawari',
+    'changelog_uri' => 'https://github.com/engura/himawari/blob/master/CHANGELOG.md',
+    'source_code_uri' => 'https://github.com/engura/himawari',
+    'bug_tracker_uri' => 'https://github.com/engura/himawari/issues'
   }
 
   s.required_ruby_version = '>= 2.5'
@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'minitest', '~> 5.14.0'
   s.add_development_dependency 'pry', '~> 0.13.1'
   s.add_development_dependency 'rake', '~> 13.0.1'
+  s.add_development_dependency 'rubocop', '~> 1.6'
 
   s.requirements << 'Mac OSX or Linux... Windows `not supported yet` due to the lack of the following:'
   s.requirements << 'parallel, ~>20161222 (Let\'s download in parallel)'

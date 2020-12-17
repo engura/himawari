@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 require 'minitest/autorun'
-require_relative '../lib/himawari.rb'
+require_relative '../lib/himawari'
 
 class HimawariTest < Minitest::Test
   # rubocop:disable Style/ClassVars
@@ -34,6 +34,7 @@ class HimawariTest < Minitest::Test
 
   def self.cleanup
     puts "Cleanup: Removing #{@@workdir}/data"
+    puts `ls -la #{@@workdir}/data`
     `rm -r #{@@workdir}/data*` if File.directory?("#{@@workdir}/data")
   end
 end

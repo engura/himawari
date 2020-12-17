@@ -1,13 +1,13 @@
 # himawari
 
 ![tech-debt](https://img.shields.io/codeclimate/tech-debt/engura/himawari)
-[![maintainability](https://img.shields.io/codeclimate/maintainability-percentage/engura/himawari)](https://codeclimate.com/github/engura/himawari)
+[![maintainability](https://img.shields.io/codeclimate/maintainability/engura/himawari)](https://codeclimate.com/github/engura/himawari)
+[![codefactor](https://img.shields.io/codefactor/grade/github/engura/himawari/main)](https://www.codefactor.io/repository/github/engura/himawari)
 [![Inline docs](https://inch-ci.org/github/engura/himawari.svg?branch=main)](https://inch-ci.org/github/engura/himawari)
 [![build](https://img.shields.io/circleci/build/github/engura/himawari)](https://app.circleci.com/pipelines/github/engura/himawari)
 
 [![gem_version](https://img.shields.io/gem/v/himawari)](https://rubygems.org/gems/himawari)
 [![gem_dl](https://img.shields.io/gem/dt/himawari)](https://rubygems.org/gems/himawari)
-
 ![lines](https://img.shields.io/tokei/lines/github/engura/himawari)
 ![size](https://img.shields.io/github/languages/code-size/engura/himawari)
 [![license](https://img.shields.io/github/license/engura/himawari)](https://opensource.org/licenses/MIT)
@@ -42,12 +42,10 @@ Or install it yourself as:
 gem install himawari
 ```
 ## Install CLI Dependencies
-Mac:
-```
-brew install imagemagick # https://github.com/minimagick/minimagick
-brew install parallel # https://linux.die.net/man/1/parallel
-```
-or Linux: run `bin/setup`
+Mac/Linux: run `bin/setup`
+On other systems, please try to install `imagemagick` and `parallel` utilities manually...
+https://linux.die.net/man/1/parallel
+https://github.com/minimagick/minimagick
 
 # Usage
 

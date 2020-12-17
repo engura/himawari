@@ -3,14 +3,17 @@
 module Himawari
   # all the misc. functions for dealing with CLI and/or OS...
   module OsUtils
+    # we gotta know what the user's OS is! (because we rely on command line utils to process images)
+    # @return [Symbol] representing the OS being used
     def self.os
-      if RUBY_PLATFORM =~ /win32/
+      case RUBY_PLATFORM
+      when /win32/
         :win
-      elsif RUBY_PLATFORM =~ /linux/
+      when /linux/
         :linux
-      elsif RUBY_PLATFORM =~ /darwin/
+      when /darwin/
         :mac
-      elsif RUBY_PLATFORM =~ /freebsd/
+      when /freebsd/
         :freebsd
       else
         :unknown
@@ -18,6 +21,8 @@ module Himawari
     end
 
     # rubocop:disable Metrics/MethodLength, Metrics/BlockLength
+    # This is just a list of args that the CLI can accept
+    # @return [Hash] of cleaned/verified params
     def self.parse_cli_args
       params = {}
 
@@ -80,12 +85,23 @@ module Himawari
     end
     # rubocop:enable Metrics/MethodLength, Metrics/BlockLength
 
+    # Ok, this is a weird method. On Mac, `script` just ran normally through ruby. But, on linux...
+    # It is refusing to interpolate variables within the `script` string properly.
+    # So, we'll make a temporary bash script, execute it, and then delete it.
+    # @param script [String] the temp script's filename
+    # @param command [String] what we actually want to be done... (probably process pics in parallel)
+    # @return nothing useful (true on success)
     def self.scriptify_sys(script, command)
       `echo "#!/bin/bash\n#{command}" > #{script}`
       `chmod +x #{script} && #{script}`
       `rm #{script}`
     end
 
+    # tiny helper method. converts normal minutes into the closest (floored) round ten-minutes.
+    # (ie like 10, 20, 30, 40, 50). Himawari website uses these in the tile filenames...
+    # @param from [Integer]
+    # @param to [Integer] these should be pretty self-explanatory. should be positive and w/in 0-59 range.
+    # @return [String] the formatted minute range string for `parallel` to use to download this range of pics
     def self.tenmin(from = 0, to = 59)
       "{#{from / 10}..#{to / 10}}"
     end
@@ -117,6 +133,10 @@ module Himawari
     # end tell
 
     # to silence the status mails, add MAILTO='' at the top of the crontab manually
+    # Sets or clears the crontab!
+    # @param cmd [String] the himawari script + all the passed args for it
+    # @param action [Symbol] what to do? :set the cron? or :clear the cron?
+    # @return nothing useful
     def self.crontab(cmd, action)
       if action == :set
         `(crontab -l ; echo \"#{cmd}\") 2>&1 | grep -v \"no crontab\" | sort | uniq | crontab -`

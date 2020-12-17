@@ -1,9 +1,11 @@
 AllCops:
+  NewCops: enable
   DisplayCopNames: true
   StyleGuideCopsOnly: false
   TargetRubyVersion: 2.5
   Exclude:
     - data/**/*
+    - vendor/**/* # needed for CircleCI runtime (gems are installed here)
 
 Layout/LineLength:
   Enabled: true
