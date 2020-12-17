@@ -31,7 +31,7 @@ jobs:
       - restore_cache:
           name: Restore Dependency cache
           keys:
-            - v2-himawari-dep-{{ checksum "bin/setup" }}-{{ arch }}
+            - v2-himawari-dep-{{ checksum ".circleci/config.yml" }}-{{ arch }}
             - v2-himawari-dep-
       - run:
           name: Just Playing Around
