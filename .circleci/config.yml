@@ -40,10 +40,11 @@ jobs:
             mkdir $CUSTOM_VAR && touch $CUSTOM_VAR/some_special_file
       - save_cache:
           name: Store Dependency cache
-          key: v2-himawari-dep-{{ checksum "bin/setup" }}-{{ arch }}
+          key: v2-himawari-dep-{{ checksum ".circleci/config.yml" }}-{{ arch }}
           paths:
             - /usr/bin/parallel
             - /usr/bin/montage
+            - /usr/sbin/iwgetid
       - persist_to_workspace:
           root: .
           paths:
@@ -74,7 +75,7 @@ jobs:
       - restore_cache:
           name: Restore Dependency cache
           keys:
-            - v2-himawari-dep-{{ checksum "bin/setup" }}-{{ arch }}
+            - v2-himawari-dep-{{ checksum ".circleci/config.yml" }}-{{ arch }}
             - v2-himawari-dep-
       - run:
           name: Test
